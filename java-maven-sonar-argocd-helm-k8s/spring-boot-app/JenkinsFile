@@ -45,19 +45,24 @@ pipeline {
             GIT_REPO_NAME = "Jenkins-Zero-To-Hero"
             GIT_USER_NAME = "kpatounis"
         }
-        steps {
-            withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
-                def IMAGE_TAG = "${BUILD_NUMBER}" 
-                sh '''
+        stage('Update Deployment File') {
+    steps {
+        withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+            script {
+                // Groovy variable
+                def IMAGE_TAG = "${BUILD_NUMBER}"
+
+                sh """
                     git config user.email "patounisk@gmail.com"
                     git config user.name "kpatounis"
                     sed -i "s/replaceImageTag/${IMAGE_TAG}/g" java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
                     git add java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
-                    git commit -m "Update deployment image to version ${IMAGE_TAG}"
-                    git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
-                '''
+                    git commit -m "Update deployment image to version ${IMAGE_TAG}" || echo "No changes to commit"
+                    git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
+                """
             }
         }
     }
+}
   }
 }
