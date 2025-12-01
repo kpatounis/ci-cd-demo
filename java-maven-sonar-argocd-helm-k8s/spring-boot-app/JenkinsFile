@@ -57,6 +57,8 @@ pipeline {
                         sh """
                             git config user.email "patounisk@gmail.com"
                             git config user.name "kpatounis"
+                            git checkout main
+                            git pull origin main
                             sed -i "s/replaceImageTag/${IMAGE_TAG}/g" java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
                             git add java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
                             git commit -m "Update deployment image to version ${IMAGE_TAG}" || echo "No changes to commit"
