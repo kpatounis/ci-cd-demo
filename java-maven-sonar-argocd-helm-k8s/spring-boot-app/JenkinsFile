@@ -1,9 +1,5 @@
 pipeline {
-  agent {
-    docker {
-      image 'kp34/jenkins-maven-docker:latest'
-       args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
-    }
+   agent any 
   }
   stages {
     stage('Checkout') {
