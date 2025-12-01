@@ -59,7 +59,7 @@ pipeline {
                             git config user.name "kpatounis"
                             git checkout main
                             git pull origin main
-                            sed -i "s/replaceImageTag/${IMAGE_TAG}/g" java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
+                            sed -i "s#kp34/ultimate-cicd:[0-9]\+#kp34/ultimate-cicd:${BUILD_NUMBER}#g" java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
                             git add java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
                             git commit -m "Update deployment image to version ${IMAGE_TAG}" || echo "No changes to commit"
                             git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
